@@ -51,6 +51,12 @@ export const cartSlice = createSlice({
   },
 });
 
+// To display the Cart Item counter
+export const quantityItemsCart = (state) => {
+	console.log(state.cart);
+	return state.cart.items.reduce((total, item) => total + item.quantity, 0);
+};
+
 export const { addItem, removeItem, updateQuantity } = cartSlice.actions;
 
 export default cartSlice.reducer;
