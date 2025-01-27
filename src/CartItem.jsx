@@ -26,13 +26,29 @@ const CartItem = ({ onContinueShopping }) => {
 	};
 
 	const handleContinueShopping = (e) => {
-    console.log("Clicked on Continue Shopping:", e.target.textContent);
+		console.log("Clicked on Continue Shopping:", e.target.textContent);
 		onContinueShopping(e);
 	};
 
-	const handleIncrement = (item) => {};
+	const handleIncrement = (item) => {
+		dispatch(
+			updateQuantity({
+				...item,
+				quantity: item.quantity + 1,
+			}),
+		);
+	};
 
-	const handleDecrement = (item) => {};
+	const handleDecrement = (item) => {
+    if (item.quantity === 1) {
+      dispatch(removeItem(item))
+    }else{
+      dispatch(updateQuantity({
+        ...item,
+        quantity: item.quantity - 1,
+      }))
+    }
+  };
 
 	const handleRemove = (item) => {
 		dispatch(removeItem(item));
