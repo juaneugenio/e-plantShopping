@@ -55,7 +55,14 @@ const CartItem = ({ onContinueShopping }) => {
 	};
 
 	// Calculate total cost based on quantity for an item
-	const calculateTotalCost = (item) => {};
+	const calculateTotalCost = (item) => {
+    const itemCost = parseFloat(item.cost.replace("$", ""));
+    // Display the initial cost for the item
+    if(item.quantity === 1){
+      return itemCost.toFixed(2);
+    }
+    return (itemCost * item.quantity).toFixed(2);
+  };
 
 	return (
 		<div className="cart-container">
@@ -66,7 +73,7 @@ const CartItem = ({ onContinueShopping }) => {
 						<img className="cart-item-image" src={item.image} alt={item.name} />
 						<div className="cart-item-details">
 							<div className="cart-item-name">{item.name}</div>
-							<div className="cart-item-cost">{item.cost}</div>
+							<div className="cart-item-cost"><span>PPU: </span>{item.cost}</div>
 							<div className="cart-item-quantity">
 								<button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>
 									-
