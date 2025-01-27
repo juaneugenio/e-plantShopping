@@ -1,18 +1,19 @@
 /** @format */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ProductList.css";
 import CartItem from "./CartItem";
-import { addItem } from "./cartSlice";
-import { quantityItemsCart } from "./cartSlice";
+import { addItem, quantityItemsCart } from "./cartSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function ProductList() {
 	const [showCart, setShowCart] = useState(false);
-	const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
+	// State to control the visibility of the About Us page
+	// const [showPlants, setShowPlants] = useState(false);
 	const [addedToCart, setAddedToCart] = useState({});
 	const dispatch = useDispatch();
-    const totalItems = useSelector(quantityItemsCart);
+	const totalItems = useSelector(quantityItemsCart);
+	const cart = useSelector((state) => state.cart.items);
 
 	const plantsArray = [
 		{
@@ -251,7 +252,8 @@ function ProductList() {
 	};
 	const handlePlantsClick = (e) => {
 		e.preventDefault();
-		setShowPlants(true); // Set showAboutUs to true when "About Us" link is clicked
+		// Set showAboutUs to true when "About Us" link is clicked
+		// setShowPlants(true);
 		setShowCart(false); // Hide the cart when navigating to About Us
 	};
 
@@ -268,6 +270,15 @@ function ProductList() {
 			[plant.name]: true,
 		}));
 	};
+// UseEffect monitors the cart state and update the addedToCart state
+	useEffect(() => {
+		const newAddedToCart = {};
+		cart.forEach((item) => {
+			newAddedToCart[item.name] = true;
+		});
+		setAddedToCart(newAddedToCart);
+	}, [cart]);
+
 	return (
 		<div>
 			<div className="navbar" style={styleObj}>
@@ -293,7 +304,7 @@ function ProductList() {
 						{" "}
 						<a href="#" onClick={(e) => handleCartClick(e)} style={styleA}>
 							<h1 className="cart">
-                                {totalItems >0 && <span className="cart-badge">{totalItems}</span>}
+								{totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									viewBox="0 0 256 256"
@@ -337,8 +348,12 @@ function ProductList() {
 													<h3 className="product-title">{plant.name}</h3>
 													<p className="product-description">{plant.description}</p>
 													<p className="product-price">{plant.cost}</p>
-													<button className="product-button" onClick={() => handleAddToCart(plant)}>
-														Add to Cart
+													<button
+														className={`product-button ${addedToCart[plant.name] ? "added-to-cart" : ""}`}
+														onClick={() => handleAddToCart(plant)}
+														disabled={addedToCart[plant.name]}
+													>
+														{addedToCart[plant.name] ? "Added to Cart" : "Add to Cart"}
 													</button>
 												</div>
 											);
