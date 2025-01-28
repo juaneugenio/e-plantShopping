@@ -1,14 +1,13 @@
 /** @format */
-
+import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { removeItem, updateQuantity } from "./cartSlice";
 import "./CartItem.css";
 
 const CartItem = ({ onContinueShopping }) => {
 	const cart = useSelector((state) => state.cart.items);
-	console.log(cart);
-
 	const dispatch = useDispatch();
+	const dialogRef = useRef(null);
 
 	// Calculate total amount for all products in the cart
 	const calculateTotalAmount = () => {
@@ -28,6 +27,10 @@ const CartItem = ({ onContinueShopping }) => {
 	const handleContinueShopping = (e) => {
 		console.log("Clicked on Continue Shopping:", e.target.textContent);
 		onContinueShopping(e);
+	};
+
+	const handleCheckoutShopping = () => {
+		dialogRef.current.showModal();
 	};
 
 	const handleIncrement = (item) => {
@@ -73,7 +76,10 @@ const CartItem = ({ onContinueShopping }) => {
 						<img className="cart-item-image" src={item.image} alt={item.name} />
 						<div className="cart-item-details">
 							<div className="cart-item-name">{item.name}</div>
-							<div className="cart-item-cost"><span>PPU: </span>{item.cost}</div>
+							<div className="cart-item-cost">
+								<span>PPU: </span>
+								{item.cost}
+							</div>
 							<div className="cart-item-quantity">
 								<button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>
 									-
@@ -97,8 +103,18 @@ const CartItem = ({ onContinueShopping }) => {
 					Continue Shopping
 				</button>
 				<br />
-				<button className="get-started-button1">Checkout</button>
+				<button className="get-started-button1" onClick={(e) => handleCheckoutShopping(e)}>
+					Checkout
+				</button>
 			</div>
+				{/* Modal */}
+			<dialog ref={dialogRef} className="checkout-dialog">
+				<h3>Checkout Information</h3>
+				<p>
+					Checkout functionality is not implemented yet. This feature is not required for the current project scope.
+				</p>
+				<button onClick={() => dialogRef.current.close()}>Close</button>
+			</dialog>
 		</div>
 	);
 };
